@@ -2,6 +2,7 @@ package com.example.login.signin.controller;
 
 import com.example.login.signin.entity.Users;
 import com.example.login.signin.repository.UserRepository;
+import com.example.login.signin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,20 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
+    @GetMapping("/details")
+    public ResponseEntity<?> getUserDetails(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = authorizationHeader.substring(7);
 
+            Users user = (Users) userService.getUserByToken(token);
+
+            return ResponseEntity.ok(user); // Return user details
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token or user not found");
+        }
+    }
     @GetMapping("/all")
     public ResponseEntity<List<Users>> getAllUsers() {
         List<Users> users = userRepository.findAll();
@@ -29,7 +43,6 @@ public class UserController {
         if (existingUser.isPresent()) {
             Users user = existingUser.get();
 
-            // Update fields if they are present in the request body
             if (updatedUser.getName() != null) {
                 user.setName(updatedUser.getName());
             }

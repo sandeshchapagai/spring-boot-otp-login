@@ -6,6 +6,8 @@ import com.example.login.signin.payload.ForgotPasswordRequest;
 import com.example.login.signin.payload.ResetPasswordRequest;
 import com.example.login.signin.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -17,7 +19,8 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private EmailService emailService;
+    private EmailService emailService;   @Autowired
+    private JwtService jwtService;
 
     public void sendForgotPasswordEmail(String email) {
         Users user = userRepository.findByEmail(email);
@@ -60,5 +63,17 @@ public class UserService {
         user.setPassword(request.getNewPassword());
         userRepository.save(user);
     }
-
+    public UserDetails getUserByToken(String token) {
+        String username = jwtService.extractUsername(token);
+        Users user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        // Convert Users to UserDetails
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .roles("USER")
+                .build();
+}
 }

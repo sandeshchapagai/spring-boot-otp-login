@@ -62,9 +62,10 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
+        final String SECRET_KEY = "YourStrongAndSecureSecretKeyYourStrongAndSecureSecretKey";
         SecretKey key = getSignInKey(); // Get the signing key
         return Jwts.parser()
-                .setSigningKey(key) // Use the signing key
+                .setSigningKey(SECRET_KEY) // Use the signing key
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
