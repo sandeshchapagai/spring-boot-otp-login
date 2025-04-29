@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),
@@ -32,6 +34,20 @@ public class Users {
 
     @Column
     private LocalDateTime otpExpiry;
+
     @Column(nullable = false)
     private String name;
+
+    // 👇 Add these mappings for Trip Mager
+    @OneToMany(mappedBy = "user")
+    private List<UserTrip> userTrips;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Expense> expenses;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "user")
+    private List<Reminder> reminders;
 }
