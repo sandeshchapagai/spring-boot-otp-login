@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@OpenAPIDefinition(
-        security = @SecurityRequirement(name = "bearerAuth")  // 🔑 Global security requirement
-)
+//@OpenAPIDefinition(
+//        security = @SecurityRequirement(name = "bearerAuth")
+//)
 @SecurityScheme(
         name = "bearerAuth",
         type = SecuritySchemeType.HTTP,
@@ -22,12 +22,12 @@ import org.springframework.context.annotation.Configuration;
 )
 public class SwaggerConfig {
 
-    @Bean  // ⚠️ Critical missing annotation
+    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .addServersItem(new Server().url("/"))
                 .info(new Info()
-                        .title("Your API Documentation")
+                        .title("Trip Manger")
                         .version("1.0")
                         .description("API for handling authentication and trips"));
     }

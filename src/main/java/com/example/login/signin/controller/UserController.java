@@ -23,9 +23,7 @@ public class UserController {
     public ResponseEntity<?> getUserDetails(@RequestHeader("Authorization") String authorizationHeader) {
         try {
             String token = authorizationHeader.substring(7);
-
             Users user = (Users) userService.getUserByToken(token);
-
             return ResponseEntity.ok(user); // Return user details
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token or user not found");

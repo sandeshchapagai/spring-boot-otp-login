@@ -26,13 +26,10 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    // Password encoder bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    // Authentication provider using UserDetailsService and password encoder
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -40,14 +37,10 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-
-    // AuthenticationManager bean to be used in AuthController
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
-    // Security filter chain configuration
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
@@ -55,9 +48,8 @@ public class SecurityConfig {
                     .authorizeHttpRequests(auth -> auth
                             .requestMatchers(
                                     "/api/auth/**",
-                                    "/swagger-ui/**",          // Swagger UI
-                                    "/v3/api-docs/**",   // OpenAPI JSON
-                                    "/api/trips/**"
+                                    "/swagger-ui/**",
+                                    "/v3/api-docs/**"
                             ).permitAll()
                             .anyRequest().authenticated()
                     )
